@@ -9,6 +9,11 @@ function toSymbol(state) {
     return symbol;
 }
 
+function randomChoice(array) {
+    let randomIndex = Math.round(Math.random() * (array.length - 1));
+    return array[randomIndex];
+}
+
 function generateRandomSquare() {
     let squares = [" ", " "," ", " ", "*", "#"];
     let randomIndex = Math.round(Math.random() * (squares.length - 1));
@@ -16,7 +21,6 @@ function generateRandomSquare() {
 }
 
 function generateRandomGrid(sideLength=10) {
-        let count = 0;
         let randomGrid = [];
         for (let i = 0; i < sideLength ** 2; i++) {
             if (i >= 0 && i < sideLength) randomGrid[i] = toSymbol("obstacle");
@@ -75,27 +79,31 @@ class Game {
                 };
     }
     decide() {
+        // Input: Current Grid, vacuum and surrounding locations ;
+        // Output: Number where vacuum should move to.
+
         let currentGrid = this.grids[this.grids.length - 1];
         let vacuumLocation = this.lookAroundVacuum().current;
-        let surroundingLocations = this.lookAroundVacuum();
-        let possibleDirections = this.lookAroundVacuum();
-        delete possibleDirections.current;
 
-        for (let location in surroundingLocations) {
-            if (currentGrid[surroundingLocations[location]] === toSymbol("obstacle")) {
-                delete possibleDirections[location];
-            }
-            if (currentGrid[surroundingLocations[location]] === toSymbol("dirty")) {
-                return possibleDirections[location];
-            }
-        }
-        let decision = Object.values(possibleDirections);
-        if (Number.isInteger(decision)) {
-            return decision;
-        }
-        //
-        let filter = Math.round(Math.random() * (decision.length - 1));
-        return decision[filter] || vacuumLocation;
+        let surroundingVacuum = this.lookAroundVacuum();
+        delete surroundingVacuum.current;
+        surroundingVacuum = Object.values(surroundingVacuum);
+
+        let obstacle = toSymbol("obstacle");
+        let dirty = toSymbol("dirty");
+        let clean = toSymbol("clean");
+
+        let surroundingClean = surroundingVacuum.filter(
+            pos => currentGrid[pos] === clean
+        );
+
+        let surroundingDirty = surroundingVacuum.filter(
+            pos => currentGrid[pos] === dirty
+        );
+
+        return randomChoice(surroundingDirty)
+            || randomChoice(surroundingClean)
+            || vacuumLocation;
     }
 
     update(decision) {
@@ -119,13 +127,6 @@ class Game {
     }
 }
 
-
-
-
-
-
-
-
-
 let seed = generateRandomGrid(10);
 let game = new Game(seed);
+game.next();
