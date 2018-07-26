@@ -15,7 +15,7 @@ function randomChoice(array) {
 }
 
 function generateRandomSquare() {
-    let squares = [" ", " "," ", " ", "*", "#"];
+    let squares = [" ", " "," ", "*", "*", "#"];
     let randomIndex = Math.round(Math.random() * (squares.length - 1));
     return squares[randomIndex];
 }
@@ -44,7 +44,7 @@ function printGrid(grid, moves) {
         }
         str += grid[i];
     }
-    return "\n" + str + "\n" + moves;
+    return "\n" + str + "\n" + (moves ? moves : "");
 }
 
 class Game {
