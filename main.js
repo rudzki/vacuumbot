@@ -88,18 +88,21 @@ debugger;
 
         surroundingVacuum = Object.values(surroundingVacuum);
 
-        let obstacle = toSymbol("obstacle");
-        let dirty = toSymbol("dirty");
         let clean = toSymbol("clean");
+        let dirty = toSymbol("dirty");
+        let obstacle = toSymbol("obstacle");
 
         let surroundingClean = surroundingVacuum.filter(
             pos => currentGrid[pos] === clean
         );
+
+        let filterVisited = list => list.filter( item => !(this.visited.includes(item)));
+
         let surroundingDirty = surroundingVacuum.filter(
             pos => currentGrid[pos] === dirty
         );
         return randomChoice(surroundingDirty)
-            || randomChoice(surroundingClean.filter( item => !(this.visited.includes(item))))
+            || randomChoice(filterVisited(surroundingClean))
             || randomChoice(surroundingClean)
             || vacuumLocation;
     }
