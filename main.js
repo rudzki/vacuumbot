@@ -113,11 +113,16 @@ class Game {
         return nextGrid;
     }
     next() {
-        let decision = this.decide();
-        let update = this.update(decision);
-        this.moves++;
-        this.grids.push(update);
-        return printGrid(update, this.moves);
+        let currentGrid = this.grids[this.grids.length - 1];
+        if (currentGrid.includes(toSymbol("dirty"))) {
+            let decision = this.decide();
+            let update = this.update(decision);
+            this.moves++;
+            this.grids.push(update);
+            return printGrid(update, this.moves);
+        } else {
+            return `All clean in ${this.moves} moves!`;
+        }
     }
 }
 
