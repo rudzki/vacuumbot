@@ -49,6 +49,7 @@ class Game {
     constructor(seedGrid) {
         this.moves = 0;
         this.grids =[];
+        this.visited = [];
         if (!seedGrid)
             seedGrid = generateRandomGrid();
         this.grids.push(seedGrid);
@@ -79,7 +80,7 @@ class Game {
     decide() {
         // Input: Current Grid, vacuum and surrounding locations ;
         // Output: Number where vacuum should move to.
-
+debugger;
         let currentGrid = this.grids[this.grids.length - 1];
         let vacuumLocation = this.lookAroundVacuum().current;
         let surroundingVacuum = this.lookAroundVacuum();
@@ -98,6 +99,7 @@ class Game {
             pos => currentGrid[pos] === dirty
         );
         return randomChoice(surroundingDirty)
+            || randomChoice(surroundingClean.filter( item => !(this.visited.includes(item))))
             || randomChoice(surroundingClean)
             || vacuumLocation;
     }
@@ -108,6 +110,7 @@ class Game {
             nextGrid[i] = currentGrid[i];
         }
         let vacuumLocation = this.lookAroundVacuum().current;
+        this.visited.push(vacuumLocation);
         nextGrid[vacuumLocation] = toSymbol("clean");
         nextGrid[decision] = toSymbol("vacuum");
         return nextGrid;
