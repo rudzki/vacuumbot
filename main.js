@@ -80,7 +80,6 @@ class Game {
     decide() {
         // Input: Current Grid, vacuum and surrounding locations ;
         // Output: Number where vacuum should move to.
-debugger;
         let currentGrid = this.grids[this.grids.length - 1];
         let vacuumLocation = this.lookAroundVacuum().current;
         let surroundingVacuum = this.lookAroundVacuum();
