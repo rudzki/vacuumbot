@@ -122,17 +122,56 @@ class Game {
     return nextGrid;
   }
 
-  next() {
+  next(print=true) {
     const currentGrid = this.grids[this.grids.length - 1];
     if (currentGrid.includes(toSymbol('dirty'))) {
       const decision = this.decide();
       const update = this.update(decision);
       this.moves++;
       this.grids.push(update);
-      return printGrid(update, this.moves);
+      if (print === false) return true;
+      else return printGrid(update, this.moves);
+    } else {
+      if (print === false) return true;
+      else return `All done in ${this.moves} moves!`;
     }
-    return `All clean in ${this.moves} moves!`;
   }
 }
 
-const game = new Game();
+let game = new Game();
+
+
+// Utilities for running trials
+
+class Trial {
+  constructor(game) {
+    this.game = game;
+  }
+  run() {
+    while (true) {
+      this.game.next(false);
+      if (this.game.next(false) === false) break;
+    }
+    return this.game.moves;
+  }
+}
+
+//   runTrials(numTrials) {
+//     let numMoves = [];
+//     for (let i = 0; i < numTrials; i++) {
+//       numMoves[i] = this.run(this.game);
+//     }
+//     let sumMoves = numMoves.reduce( (a,b) => a + b );
+//     return `
+//       Num Trials Requested: ${numTrials}
+//       Num Trials Completed: ${numMoves.length}
+//       ==
+//       Trial results: ${numMoves.toString()}
+//       Average moves to finish: ${sumMoves/numMoves.length}
+//     `;
+//   }
+// }
+//
+// let gameForTrial = new Game();
+// let trial = new Trial(gameForTrial);
+// console.log(trial.runTrials(2));
