@@ -6,7 +6,7 @@ function randomChoice(array) {
 }
 
 function generateRandomSquare() {
-    let squares = [" ", " "," ", "*", "*", "#"];
+    let squares = [" ", " ", " ", "*", "*", "#"];
     return randomChoice(squares);
 }
 
