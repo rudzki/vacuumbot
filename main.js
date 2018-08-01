@@ -129,49 +129,44 @@ class Game {
       const update = this.update(decision);
       this.moves++;
       this.grids.push(update);
-      if (print === false) return true;
-      else return printGrid(update, this.moves);
-    } else {
-      if (print === false) return true;
-      else return `All done in ${this.moves} moves!`;
+      return (print === false) ? true : printGrid(update, this.moves);
     }
+    return (print === false) ? false : `All done in ${this.moves} moves!`;
   }
 }
-
-let game = new Game();
-
 
 // Utilities for running trials
 
 class Trial {
   constructor(game) {
     this.game = game;
+    this.firstGrid = this.game.grids[0];
   }
   run() {
     while (true) {
       this.game.next(false);
       if (this.game.next(false) === false) break;
     }
-    return this.game.moves;
+    let totalMoves = this.game.moves;
+    this.game = new Game(this.game.grids[0]);
+    return totalMoves;
+  }
+  runTrials(numTrials) {
+    let numMoves = [];
+    for (let i = 0; i < numTrials; i++) {
+      numMoves[i] = this.run(this.game);
+    }
+    let sumMoves = numMoves.reduce( (a,b) => a + b );
+    return `
+      Num Trials Requested: ${numTrials}
+      Num Trials Completed: ${numMoves.length}
+      ==
+      Trial results: ${numMoves}
+      Average moves to finish: ${sumMoves/numMoves.length}
+    `;
   }
 }
 
-//   runTrials(numTrials) {
-//     let numMoves = [];
-//     for (let i = 0; i < numTrials; i++) {
-//       numMoves[i] = this.run(this.game);
-//     }
-//     let sumMoves = numMoves.reduce( (a,b) => a + b );
-//     return `
-//       Num Trials Requested: ${numTrials}
-//       Num Trials Completed: ${numMoves.length}
-//       ==
-//       Trial results: ${numMoves.toString()}
-//       Average moves to finish: ${sumMoves/numMoves.length}
-//     `;
-//   }
-// }
-//
-// let gameForTrial = new Game();
-// let trial = new Trial(gameForTrial);
-// console.log(trial.runTrials(2));
+let game = new Game();
+// let trial = new Trial(game);
+// console.log(trial.runTrials(10));
