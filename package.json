@@ -1,0 +1,25 @@
+{
+  "name": "vacuumbot",
+  "version": "1.0.0",
+  "description": "a little javascript roomba",
+  "main": "main.js",
+  "scripts": {
+    "test": "open index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rudzki/vacuumbot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rudzki/vacuumbot/issues"
+  },
+  "homepage": "https://github.com/rudzki/vacuumbot#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0"
+  },
+  "dependencies": {}
+}
