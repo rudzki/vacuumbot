@@ -91,19 +91,28 @@ class Game {
     const dirty = toSymbol('dirty');
     const obstacle = toSymbol('obstacle');
 
-    const surroundingClean = surroundingVacuum.filter(
-      pos => currentGrid[pos] === clean,
-    );
+    ///// BOT SETTING
+    let bot = "aware";
 
-    const notRecentlyVisited = list => list.filter(item => !this.recentlyVisited.includes(item));
+    if (bot === "aware") {
+      const surroundingClean = surroundingVacuum.filter(
+        pos => currentGrid[pos] === clean,
+      );
+      const notRecentlyVisited = list => list.filter(item => !this.recentlyVisited.includes(item));
+      const surroundingDirty = surroundingVacuum.filter(
+        pos => currentGrid[pos] === dirty,
+      );
+      return randomChoice(surroundingDirty)
+              || randomChoice(notRecentlyVisited(surroundingClean))
+              || randomChoice(surroundingClean)
+              || vacuumLocation;
+    } else if (bot === "zamboni") {
 
-    const surroundingDirty = surroundingVacuum.filter(
-      pos => currentGrid[pos] === dirty,
-    );
-    return randomChoice(surroundingDirty)
-            || randomChoice(notRecentlyVisited(surroundingClean))
-            || randomChoice(surroundingClean)
-            || vacuumLocation;
+      // new bot
+
+    } else {
+      throw err;
+    }
   }
 
   update(decision) {
@@ -168,5 +177,7 @@ class Trial {
 }
 
 let game = new Game();
-// let trial = new Trial(game);
-// console.log(trial.runTrials(10));
+let trial = new Trial(game);
+let out = trial.runTrials(50);
+
+console.log(out);
