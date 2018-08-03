@@ -4,7 +4,8 @@
   "description": "a little javascript roomba",
   "main": "main.js",
   "scripts": {
-    "test": "open index.html"
+    "test": "open index.html",
+    "start": "node main.js"
   },
   "repository": {
     "type": "git",
