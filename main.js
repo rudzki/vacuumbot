@@ -1,33 +1,22 @@
 // Roomba-like vacuum bot
 
-function randomChoice(array) {
-  const randomIndex = Math.round(Math.random() * (array.length - 1));
-  return array[randomIndex];
-}
+let utils = require('./utils');
+let decider = require('./decider');
 
-function generateRandomSquare() {
+let generateRandomSquare = () => {
   const squares = [' ', ' ', ' ', '*', '*', '#'];
-  return randomChoice(squares);
-}
+  return utils.randomChoice(squares);
+};
 
-function toSymbol(state) {
-  let symbol;
-  if (state === 'clean') symbol = ' ';
-  if (state === 'dirty') symbol = '*';
-  if (state === 'obstacle') symbol = '#';
-  if (state === 'vacuum') symbol = 'o';
-  return symbol;
-}
-
-function generateRandomGrid(sideLength = 10) {
+let generateRandomGrid = (sideLength = 10) => {
   const randomGrid = [];
   for (let i = 0; i < sideLength ** 2; i++) {
-    if (i >= 0 && i < sideLength) randomGrid[i] = toSymbol('obstacle');
-    else if (i % sideLength === 0) randomGrid[i] = toSymbol('obstacle');
-    else if (i % sideLength === (sideLength - 1)) randomGrid[i] = toSymbol('obstacle');
-    else if (i > (sideLength ** 2) - sideLength && i < (sideLength ** 2)) randomGrid[i] = toSymbol('obstacle');
+    if (i >= 0 && i < sideLength) randomGrid[i] = utils.toSymbol('obstacle');
+    else if (i % sideLength === 0) randomGrid[i] = utils.toSymbol('obstacle');
+    else if (i % sideLength === (sideLength - 1)) randomGrid[i] = utils.toSymbol('obstacle');
+    else if (i > (sideLength ** 2) - sideLength && i < (sideLength ** 2)) randomGrid[i] = utils.toSymbol('obstacle');
     else randomGrid[i] = generateRandomSquare();
-    if (i === Math.round(1.5 * sideLength)) randomGrid[i] = toSymbol('vacuum');
+    if (i === Math.round(1.5 * sideLength)) randomGrid[i] = utils.toSymbol('vacuum');
   }
   return randomGrid;
 }
@@ -56,7 +45,7 @@ class Game {
 
   lookAroundVacuum() {
     const currentGrid = this.grids[this.grids.length - 1];
-    const vacuumLocation = currentGrid.indexOf(toSymbol('vacuum'));
+    const vacuumLocation = currentGrid.indexOf(utils.toSymbol('vacuum'));
     return {
       current: vacuumLocation,
       north: vacuumLocation - Math.round(Math.sqrt(currentGrid.length)),
@@ -77,44 +66,6 @@ class Game {
     };
   }
 
-  decide() {
-    // Input: Current Grid, vacuum and surrounding locations ;
-    // Output: Number where vacuum should move to.
-    const currentGrid = this.grids[this.grids.length - 1];
-    const vacuumLocation = this.lookAroundVacuum().current;
-    let surroundingVacuum = this.lookAroundVacuum();
-    delete surroundingVacuum.current;
-
-    surroundingVacuum = Object.values(surroundingVacuum);
-
-    const clean = toSymbol('clean');
-    const dirty = toSymbol('dirty');
-    const obstacle = toSymbol('obstacle');
-
-    ///// BOT SETTING
-    let bot = "aware";
-
-    if (bot === "aware") {
-      const surroundingClean = surroundingVacuum.filter(
-        pos => currentGrid[pos] === clean,
-      );
-      const notRecentlyVisited = list => list.filter(item => !this.recentlyVisited.includes(item));
-      const surroundingDirty = surroundingVacuum.filter(
-        pos => currentGrid[pos] === dirty,
-      );
-      return randomChoice(surroundingDirty)
-              || randomChoice(notRecentlyVisited(surroundingClean))
-              || randomChoice(surroundingClean)
-              || vacuumLocation;
-    } else if (bot === "zamboni") {
-
-      // new bot
-
-    } else {
-      throw err;
-    }
-  }
-
   update(decision) {
     const currentGrid = this.grids[this.grids.length - 1];
     const nextGrid = [];
@@ -126,15 +77,15 @@ class Game {
     if (this.recentlyVisited.length > 10) {
       this.recentlyVisited.shift();
     }
-    nextGrid[vacuumLocation] = toSymbol('clean');
-    nextGrid[decision] = toSymbol('vacuum');
+    nextGrid[vacuumLocation] = utils.toSymbol('clean');
+    nextGrid[decision] = utils.toSymbol('vacuum');
     return nextGrid;
   }
 
   next(print=true) {
     const currentGrid = this.grids[this.grids.length - 1];
-    if (currentGrid.includes(toSymbol('dirty'))) {
-      const decision = this.decide();
+    if (currentGrid.includes(utils.toSymbol('dirty'))) {
+      const decision = decider.decider(this.lookAroundVacuum(), currentGrid, this.recentlyVisited);
       const update = this.update(decision);
       this.moves++;
       this.grids.push(update);
@@ -176,8 +127,7 @@ class Trial {
   }
 }
 
+
 let game = new Game();
 let trial = new Trial(game);
-let out = trial.runTrials(50);
-
-console.log(out);
+console.log(trial.runTrials(5));
