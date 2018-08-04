@@ -38,7 +38,7 @@
 
   Animated.prototype.tick = function () {
     this.pre.removeChild(this.pre.firstChild);
-    this.pre.appendChild(this.pre.ownerDocument.createTextNode(game.next()));
+    this.pre.appendChild(this.pre.ownerDocument.createTextNode(game()));
   };
 
   Animated.prototype.disable = function () {

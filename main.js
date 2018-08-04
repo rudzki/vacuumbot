@@ -129,5 +129,7 @@ class Trial {
 
 
 let game = new Game();
-let trial = new Trial(game);
-console.log(trial.runTrials(5));
+
+window.game = (function() {
+  return function() { return game.next() };
+})();
