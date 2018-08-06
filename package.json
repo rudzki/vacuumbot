@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "open index.html",
-    "build": "browserify animateworld.js main.js utils.js decider.js -o bundle.js"
+    "build": "browserify *.js -o bundle.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "babel-plugin-transform-inline-imports-commonjs": "^1.2.0",
+    "browserify": "^16.2.2",
     "uniq": "^1.0.1"
   }
 }
