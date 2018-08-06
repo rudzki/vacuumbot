@@ -129,7 +129,4 @@ class Trial {
 
 
 let game = new Game();
-
-window.game = (function() {
-  return function() { return game.next() };
-})();
+window.game = function() { return game.next() };
