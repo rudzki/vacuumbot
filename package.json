@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "open index.html",
-    "build": "browserify *.js -o bundle.js"
+    "build": "browserify *.js -o bundle.js",
+    "watch": "watchify *.js -o bundle.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
   "dependencies": {
     "babel-plugin-transform-inline-imports-commonjs": "^1.2.0",
     "browserify": "^16.2.2",
-    "uniq": "^1.0.1"
+    "uniq": "^1.0.1",
+    "watchify": "^3.11.0"
   }
 }
