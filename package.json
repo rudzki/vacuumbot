@@ -6,7 +6,7 @@
   "scripts": {
     "test": "open index.html",
     "build": "browserify *.js -o bundle.js",
-    "watch": "watchify *.js -o bundle.js -v"
+    "watch": "watchify -o bundle.js -v -d animategame.js decider.js main.js utils.js"
   },
   "repository": {
     "type": "git",
